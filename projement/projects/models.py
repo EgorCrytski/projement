@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -5,7 +8,6 @@ from django.utils.text import slugify
 
 
 class Company(models.Model):
-
     class Meta:
         verbose_name_plural = "companies"
 
@@ -16,21 +18,26 @@ class Company(models.Model):
 
 
 class Project(models.Model):
-
     company = models.ForeignKey('projects.Company', on_delete=models.PROTECT, related_name='projects')
 
     title = models.CharField('Project title', max_length=128)
     start_date = models.DateField('Project start date', blank=True, null=True)
     end_date = models.DateField('Project end date', blank=True, null=True)
 
-    estimated_design = models.PositiveSmallIntegerField('Estimated design hours')
-    actual_design = models.PositiveSmallIntegerField('Actual design hours', default=0)
+    estimated_design = models.DecimalField('Estimated design hours', max_digits=5, decimal_places=1,
+                                           validators=[MinValueValidator(Decimal('0.01'))])
+    actual_design = models.DecimalField('Actual design hours', default=0, decimal_places=1, max_digits=5,
+                                        validators=[MinValueValidator(Decimal('0.01'))])
 
-    estimated_development = models.PositiveSmallIntegerField('Estimated development hours')
-    actual_development = models.PositiveSmallIntegerField('Actual development hours', default=0)
+    estimated_development = models.DecimalField('Estimated development hours', max_digits=5, decimal_places=1,
+                                                validators=[MinValueValidator(Decimal('0.01'))])
+    actual_development = models.DecimalField('Actual development hours', default=0, decimal_places=1, max_digits=5,
+                                             validators=[MinValueValidator(Decimal('0.01'))])
 
-    estimated_testing = models.PositiveSmallIntegerField('Estimated testing hours')
-    actual_testing = models.PositiveSmallIntegerField('Actual testing hours', default=0)
+    estimated_testing = models.DecimalField('Estimated testing hours', max_digits=5, decimal_places=1,
+                                            validators=[MinValueValidator(Decimal('0.01'))])
+    actual_testing = models.DecimalField('Actual testing hours', default=0, decimal_places=1, max_digits=5,
+                                         validators=[MinValueValidator(Decimal('0.01'))])
 
     def __str__(self):
         return self.title
