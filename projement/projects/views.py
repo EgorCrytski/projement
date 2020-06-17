@@ -1,5 +1,4 @@
 import os
-import datetime
 
 from django.db.models import F
 from django.conf import settings
@@ -48,3 +47,9 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        form.instance.actual_design += F('actual_design')
+        form.instance.actual_development += F('actual_development')
+        form.instance.actual_testing += F('actual_testing')
+        return super().form_valid(form)
