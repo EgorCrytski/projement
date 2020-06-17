@@ -1,5 +1,7 @@
 import os
+import datetime
 
+from django.db.models import F
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls.base import reverse_lazy
@@ -32,14 +34,13 @@ class AssignmentView(TemplateView):
 
 class DashboardView(LoginRequiredMixin, ListView):
     model = Project
-    ordering = ('-start_date',)
+    ordering = ('-end_date',)
     context_object_name = 'projects'
     template_name = 'projects/dashboard.html'
 
     def get_queryset(self):
         projects = super().get_queryset()
         projects = projects.select_related('company')
-
         return projects
 
 
