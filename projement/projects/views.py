@@ -12,7 +12,7 @@ from django.views.generic.list import ListView
 from markdown import markdown
 
 from projects.forms import ProjectForm
-from projects.models import Project
+from projects.models import Project, Log
 
 
 class AssignmentView(TemplateView):
@@ -53,3 +53,13 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.actual_development += F('actual_development')
         form.instance.actual_testing += F('actual_testing')
         return super().form_valid(form)
+
+class LogView(LoginRequiredMixin, ListView):
+    model = Log
+    context_object_name = 'log'
+    template_name = 'projects/log.html'
+
+    def get_queryset(self):
+        log = super().get_queryset()
+        log = log.select_related('user')
+        return log

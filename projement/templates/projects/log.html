@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th width="10%">Project</th>
+                    <th width="9%">User</th>
+                    <th width="9%">Initial design</th>
+                    <th width="9%">Result design</th>
+                    <th width="9%">Delta design</th>
+                    <th width="9%">Initial development</th>
+                    <th width="9%">Result development</th>
+                    <th width="9%">Delta development</th>
+                    <th width="9%">Initial testing</th>
+                    <th width="9%">Result testing</th>
+                    <th width="9%">Delta testing</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in log %}
+                    <tr>
+                        <td>
+                            <a href="{{ record.project.get_absolute_url }}">{{ record.project.title }}</a>
+                        </td>
+                        <td>{{ record.user.username }}</td>
+                        <td>{{ record.initial_design }}</td>
+                        <td>{{ record.result_design }}</td>
+                        <td>{{ record.delta_design }}</td>
+                        <td>{{ record.initial_development }}</td>
+                        <td>{{ record.result_development }}</td>
+                        <td>{{ record.delta_development }}</td>
+                        <td>{{ record.initial_testing }}</td>
+                        <td>{{ record.result_testing }}</td>
+                        <td>{{ record.delta_testing }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}
