@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from projects.models import Company, Project
+from projects.models import Company, Project, Log
 class CompaniesListFilter(admin.SimpleListFilter):
 
     """
@@ -77,6 +77,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Company)
+admin.site.register(Log)
 admin.site.register(Project, ProjectAdmin)
 
 
