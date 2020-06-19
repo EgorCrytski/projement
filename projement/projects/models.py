@@ -1,10 +1,9 @@
 from decimal import Decimal
-from django.contrib.auth.models import User
+
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.text import slugify
 
 
 class Company(models.Model):
@@ -43,7 +42,7 @@ class Project(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('project-update', kwargs={'pk': self.pk, 'slug': slugify(self.title)})
+        return reverse('project-update', kwargs={'pk': self.pk})
 
     @property
     def has_ended(self):
@@ -61,24 +60,25 @@ class Project(models.Model):
     def is_over_budget(self):
         return self.total_actual_hours > self.total_estimated_hours
 
+
 class Log(models.Model):
     project = models.ForeignKey('Project', on_delete=models.PROTECT)
     user = models.ForeignKey('auth.user', on_delete=models.PROTECT)
 
-    initial_design = models.DecimalField('Initial design hours', default= 0,  max_digits=5, decimal_places=1,
-                                           validators=[MinValueValidator(Decimal('0.01'))])
+    initial_design = models.DecimalField('Initial design hours', default=0, max_digits=5, decimal_places=1,
+                                         validators=[MinValueValidator(Decimal('0.01'))])
 
     result_design = models.DecimalField('Result design hours', default=0, decimal_places=1, max_digits=5,
                                         validators=[MinValueValidator(Decimal('0.01'))])
 
     initial_development = models.DecimalField('Initial development hours', default=0, max_digits=5, decimal_places=1,
-                                                validators=[MinValueValidator(Decimal('0.01'))])
+                                              validators=[MinValueValidator(Decimal('0.01'))])
 
     result_development = models.DecimalField('Result development hours', default=0, decimal_places=1, max_digits=5,
                                              validators=[MinValueValidator(Decimal('0.01'))])
 
     initial_testing = models.DecimalField('Initial testing hours', default=0, max_digits=5, decimal_places=1,
-                                            validators=[MinValueValidator(Decimal('0.01'))])
+                                          validators=[MinValueValidator(Decimal('0.01'))])
 
     result_testing = models.DecimalField('Result testing hours', default=0, decimal_places=1, max_digits=5,
                                          validators=[MinValueValidator(Decimal('0.01'))])
@@ -90,7 +90,6 @@ class Log(models.Model):
     @property
     def delta_development(self):
         return self.result_development - self.initial_development
-
 
     @property
     def delta_testing(self):
