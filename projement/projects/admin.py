@@ -1,8 +1,9 @@
 from django.contrib import admin
 
-from projects.models import Company, Project, Log
-class CompaniesListFilter(admin.SimpleListFilter):
+from projects.models import Company, Project, Log, ProjectTag, Tag
 
+
+class CompaniesListFilter(admin.SimpleListFilter):
     """
     This filter will always return a subset of the instances in a Model, either filtering by the
     user choice or by a default value.
@@ -58,9 +59,10 @@ class CompaniesListFilter(admin.SimpleListFilter):
                 value = self.default_value
         return str(value)
 
+
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title', 'company', 'start_date', 'end_date')
-    list_filter = ('company__name', 'company__id', CompaniesListFilter)
+    list_filter = ('company__name', 'company__id', CompaniesListFilter) #, 'show_tags')
     ordering = ('-start_date',)
 
     fieldsets = (
@@ -75,10 +77,13 @@ class ProjectAdmin(admin.ModelAdmin):
 
         return 'company',
 
+'''    def show_tags(self, obj):
+        return "\n".join([a.tag_name for a in obj.Tag_set.all()])'''
+
+
 
 admin.site.register(Company)
 admin.site.register(Log)
 admin.site.register(Project, ProjectAdmin)
-
-
-
+admin.site.register(ProjectTag)
+admin.site.register(Tag)

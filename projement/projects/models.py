@@ -83,6 +83,9 @@ class Log(models.Model):
     result_testing = models.DecimalField('Result testing hours', default=0, decimal_places=1, max_digits=5,
                                          validators=[MinValueValidator(Decimal('0.01'))])
 
+    def __str__(self):
+        return self.project.title + ': ' + self.user.username
+
     @property
     def delta_design(self):
         return self.result_design - self.initial_design
@@ -94,3 +97,19 @@ class Log(models.Model):
     @property
     def delta_testing(self):
         return self.result_testing - self.initial_testing
+
+class Tag(models.Model):
+    tag_name = models.CharField('Tag name', max_length=16)
+    project = models.ManyToManyField('Project', through='ProjectTag', related_name='tags')
+
+    def __str__(self):
+        return self.tag_name
+
+
+class ProjectTag(models.Model):
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    tag = models.ForeignKey('Tag', on_delete=models.CASCADE)
+    attach_date = models.DateField('Date of attachment', auto_now=True)
+
+    def __str__(self):
+        return self.project.title + ': '+self.tag.tag_name
