@@ -15,19 +15,19 @@ class LogForm(forms.Form):
 
     def clean_actual_design(self):
         data = self.cleaned_data['actual_design']
-        if data < 0.1 or data > 9999.9:
+        if data < 0 or data > 9999.9:
             raise ValidationError(_('Invalid value'))
         return data
 
     def clean_actual_development(self):
         data = self.cleaned_data['actual_development']
-        if data < 0.1 or data > 9999.9:
+        if data < 0 or data > 9999.9:
             raise ValidationError(_('Invalid value'))
         return data
 
     def clean_actual_testing(self):
         data = self.cleaned_data['actual_testing']
-        if data < 0.1 or data > 9999.9:
+        if data < 0 or data > 9999.9:
             raise ValidationError(_('Invalid value'))
         return data
 
