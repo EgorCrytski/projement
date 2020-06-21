@@ -9,6 +9,7 @@ verify_ssl = true
 django-crispy-forms = "==1.7.2"
 Django = "==2.2"
 Markdown = "==3.1"
+xlwt = "*"
 
 [requires]
 python_version = "3.8"

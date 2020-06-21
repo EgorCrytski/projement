@@ -12,14 +12,43 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
-
+from django.http import HttpResponse
+from django.contrib.auth.models import User
 from markdown import markdown
 
 from projects.forms import ProjectForm, LogForm
 from projects.models import Project, Log
 
+import xlwt
 
-def LogChanges(request, pk):
+
+def export_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="Projects.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Projects')
+    # Sheet header, first row
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    columns = ['Project', 'Company', 'Estimated', 'Actual',]
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+    # Sheet body, remaining rows
+    #rows = Project.objects.all().values_list('title', 'company', Project.total_estimated_hours, Project.total_actual_hours)
+    projects = Project.objects.all()
+
+    font_style = xlwt.XFStyle()
+    for project in projects:
+        row_num += 1
+        pobj = [project.title, project.company.name, project.total_estimated_hours, project.total_actual_hours]
+        for col_num in range(len(pobj)):
+            ws.write(row_num, col_num, pobj[col_num], font_style)
+    wb.save(response)
+    return response
+
+
+def log_changes(request, pk):
     project = get_object_or_404(Project, id=pk)
     log = Log()
     if request.method == "POST":
