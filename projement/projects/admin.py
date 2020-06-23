@@ -44,20 +44,6 @@ class CompaniesListFilter(admin.SimpleListFilter):
             return queryset.filter(company_id=self.value())
         return queryset
 
-    def value(self):
-        """
-        Overriding this method will allow us to always have a default value.
-        """
-        value = super(CompaniesListFilter, self).value()
-        if value is None:
-            if self.default_value is None:
-                # If there is at least one Species, return the first by name. Otherwise, None.
-                first_companies = Company.objects.order_by('name').first()
-                value = None if first_companies is None else first_companies.id
-                self.default_value = value
-            else:
-                value = self.default_value
-        return str(value)
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -76,9 +62,6 @@ class ProjectAdmin(admin.ModelAdmin):
             return ()
 
         return 'company',
-
-'''    def show_tags(self, obj):
-        return "\n".join([a.tag_name for a in obj.Tag_set.all()])'''
 
 
 
