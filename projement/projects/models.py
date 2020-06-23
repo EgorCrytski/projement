@@ -26,17 +26,17 @@ class Project(models.Model):
     estimated_design = models.DecimalField('Estimated design hours', max_digits=5, decimal_places=1,
                                            validators=[MinValueValidator(Decimal('0.01'))])
     actual_design = models.DecimalField('Actual design hours', default=0, decimal_places=1, max_digits=5,
-                                        validators=[MinValueValidator(Decimal('0.01'))])
+                                        validators=[MinValueValidator(Decimal('0'))])
 
     estimated_development = models.DecimalField('Estimated development hours', max_digits=5, decimal_places=1,
                                                 validators=[MinValueValidator(Decimal('0.01'))])
     actual_development = models.DecimalField('Actual development hours', default=0, decimal_places=1, max_digits=5,
-                                             validators=[MinValueValidator(Decimal('0.01'))])
+                                             validators=[MinValueValidator(Decimal('0'))])
 
     estimated_testing = models.DecimalField('Estimated testing hours', max_digits=5, decimal_places=1,
                                             validators=[MinValueValidator(Decimal('0.01'))])
     actual_testing = models.DecimalField('Actual testing hours', default=0, decimal_places=1, max_digits=5,
-                                         validators=[MinValueValidator(Decimal('0.01'))])
+                                         validators=[MinValueValidator(Decimal('0'))])
 
     def __str__(self):
         return self.title

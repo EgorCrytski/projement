@@ -1,3 +1,4 @@
+from django.contrib.admin import AdminSite
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 
@@ -46,21 +47,18 @@ class DashboardTestCase(TestCase):
         projects = response.context['projects']
         self.assertEqual(projects[0].title, 'Comics')
 
-'''class TagsTestCase(TestCase):
+class TagsTestCase(TestCase):
+
     def setUp(self):
-        super().setUp()
+        site = AdminSite()
+        self.admin = MyAdmin(MyModel, site)
 
-        username, password = 'admin', 'admin'
-        user = User.objects.create_superuser(username=username, email='info@throgate.eu', password=password)
+    def test_delete_model(self):
+        obj = MyModel.objects.get(pk=1)
+        self.admin.delete_model(request, obj)
 
-        self.authenticated_client = Client()
-        self.authenticated_client.login(username=username, password=password)
-
-    def test_create_tag(self):
-        data = {'tag_name':'tag'}
-        response = self.authenticated_client.post('/admin/projects/tag/add/', data)
-        print(response)
-        self.assertEqual(response.status_code, 200)'''
+        deleted = MyModel.objects.filter(pk=1).first()
+        self.assertEqual(deleted, None)
 
 
 class ProjectsTestCase(TestCase):
