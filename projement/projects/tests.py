@@ -38,6 +38,30 @@ class DashboardTestCase(TestCase):
         projects = response.context['projects']
         self.assertEqual(len(projects), 3)
 
+    def test_projects_ordering(self):
+
+        # First project must be 'Comics'
+
+        response = self.authenticated_client.get('/dashboard/')
+        projects = response.context['projects']
+        self.assertEqual(projects[0].title, 'Comics')
+
+'''class TagsTestCase(TestCase):
+    def setUp(self):
+        super().setUp()
+
+        username, password = 'admin', 'admin'
+        user = User.objects.create_superuser(username=username, email='info@throgate.eu', password=password)
+
+        self.authenticated_client = Client()
+        self.authenticated_client.login(username=username, password=password)
+
+    def test_create_tag(self):
+        data = {'tag_name':'tag'}
+        response = self.authenticated_client.post('/admin/projects/tag/add/', data)
+        print(response)
+        self.assertEqual(response.status_code, 200)'''
+
 
 class ProjectsTestCase(TestCase):
     fixtures = ['projects/fixtures/initial.json']
