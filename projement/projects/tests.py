@@ -1,7 +1,7 @@
 from django.contrib.admin import AdminSite
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
-
+from projects.forms import LogForm
 from projects.models import Project
 
 
@@ -47,18 +47,19 @@ class DashboardTestCase(TestCase):
         projects = response.context['projects']
         self.assertEqual(projects[0].title, 'Comics')
 
-class TagsTestCase(TestCase):
 
-    def setUp(self):
-        site = AdminSite()
-        self.admin = MyAdmin(MyModel, site)
+class FormTestCase(TestCase):
 
-    def test_delete_model(self):
-        obj = MyModel.objects.get(pk=1)
-        self.admin.delete_model(request, obj)
+    def test_validation(self):
+        data = {'actual_design':'-5','actual_development':'-5','actual_testing':'-5'}
+        form = LogForm(data)
+        self.assertFalse(form.is_valid())
 
-        deleted = MyModel.objects.filter(pk=1).first()
-        self.assertEqual(deleted, None)
+        data = {'actual_design': '5', 'actual_development': '5', 'actual_testing': '5'}
+        form = LogForm(data)
+        self.assertTrue(form.is_valid())
+
+
 
 
 class ProjectsTestCase(TestCase):
