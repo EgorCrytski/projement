@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -17,26 +17,32 @@ class Company(models.Model):
 
 
 class Project(models.Model):
-    company = models.ForeignKey('projects.Company', on_delete=models.PROTECT, related_name='projects')
+    company = models.ForeignKey('projects.Company', on_delete=models.CASCADE, related_name='projects')
 
     title = models.CharField('Project title', max_length=128)
     start_date = models.DateField('Project start date', blank=True, null=True)
     end_date = models.DateField('Project end date', blank=True, null=True)
 
-    estimated_design = models.DecimalField('Estimated design hours', max_digits=5, decimal_places=1,
-                                           validators=[MinValueValidator(Decimal('0.01'))])
-    actual_design = models.DecimalField('Actual design hours', default=0, decimal_places=1, max_digits=5,
-                                        validators=[MinValueValidator(Decimal('0'))])
+    estimated_design = models.DecimalField('Estimated design hours', max_digits=7, decimal_places=2,
+                                           validators=[MinValueValidator(Decimal('0.01')),
+                                                       MaxValueValidator(Decimal('9999.99'))])
+    actual_design = models.DecimalField('Actual design hours', default=0, decimal_places=2, max_digits=7,
+                                        validators=[MinValueValidator(Decimal('0')),
+                                                    MaxValueValidator(Decimal('9999.99'))])
 
-    estimated_development = models.DecimalField('Estimated development hours', max_digits=5, decimal_places=1,
-                                                validators=[MinValueValidator(Decimal('0.01'))])
-    actual_development = models.DecimalField('Actual development hours', default=0, decimal_places=1, max_digits=5,
-                                             validators=[MinValueValidator(Decimal('0'))])
+    estimated_development = models.DecimalField('Estimated development hours', max_digits=7, decimal_places=2,
+                                                validators=[MinValueValidator(Decimal('0.01')),
+                                                            MaxValueValidator(Decimal('9999.99'))])
+    actual_development = models.DecimalField('Actual development hours', default=0, decimal_places=2, max_digits=7,
+                                             validators=[MinValueValidator(Decimal('0')),
+                                                         MaxValueValidator(Decimal('9999.99'))])
 
-    estimated_testing = models.DecimalField('Estimated testing hours', max_digits=5, decimal_places=1,
-                                            validators=[MinValueValidator(Decimal('0.01'))])
-    actual_testing = models.DecimalField('Actual testing hours', default=0, decimal_places=1, max_digits=5,
-                                         validators=[MinValueValidator(Decimal('0'))])
+    estimated_testing = models.DecimalField('Estimated testing hours', max_digits=7, decimal_places=2,
+                                            validators=[MinValueValidator(Decimal('0.01')),
+                                                        MaxValueValidator(Decimal('9999.99'))])
+    actual_testing = models.DecimalField('Actual testing hours', default=0, decimal_places=2, max_digits=7,
+                                         validators=[MinValueValidator(Decimal('0')),
+                                                     MaxValueValidator(Decimal('9999.99'))])
 
     def __str__(self):
         return self.title
@@ -62,26 +68,32 @@ class Project(models.Model):
 
 
 class Log(models.Model):
-    project = models.ForeignKey('Project', on_delete=models.PROTECT)
-    user = models.ForeignKey('auth.user', on_delete=models.PROTECT)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    user = models.ForeignKey('auth.user', on_delete=models.CASCADE)
 
-    initial_design = models.DecimalField('Initial design hours', default=0, max_digits=5, decimal_places=1,
-                                         validators=[MinValueValidator(Decimal('0.01'))])
+    initial_design = models.DecimalField('Initial design hours', default=0, max_digits=7, decimal_places=2,
+                                         validators=[MinValueValidator(Decimal('0.01')),
+                                                     MaxValueValidator(Decimal('9999.99'))])
 
-    result_design = models.DecimalField('Result design hours', default=0, decimal_places=1, max_digits=5,
-                                        validators=[MinValueValidator(Decimal('0.01'))])
+    result_design = models.DecimalField('Result design hours', default=0, decimal_places=2, max_digits=7,
+                                        validators=[MinValueValidator(Decimal('0.01')),
+                                                    MaxValueValidator(Decimal('9999.99'))])
 
-    initial_development = models.DecimalField('Initial development hours', default=0, max_digits=5, decimal_places=1,
-                                              validators=[MinValueValidator(Decimal('0.01'))])
+    initial_development = models.DecimalField('Initial development hours', default=0, max_digits=7, decimal_places=2,
+                                              validators=[MinValueValidator(Decimal('0.01')),
+                                                          MaxValueValidator(Decimal('9999.99'))])
 
-    result_development = models.DecimalField('Result development hours', default=0, decimal_places=1, max_digits=5,
-                                             validators=[MinValueValidator(Decimal('0.01'))])
+    result_development = models.DecimalField('Result development hours', default=0, decimal_places=2, max_digits=7,
+                                             validators=[MinValueValidator(Decimal('0.01')),
+                                                         MaxValueValidator(Decimal('9999.99'))])
 
-    initial_testing = models.DecimalField('Initial testing hours', default=0, max_digits=5, decimal_places=1,
-                                          validators=[MinValueValidator(Decimal('0.01'))])
+    initial_testing = models.DecimalField('Initial testing hours', default=0, max_digits=7, decimal_places=2,
+                                          validators=[MinValueValidator(Decimal('0.01')),
+                                                      MaxValueValidator(Decimal('9999.99'))])
 
-    result_testing = models.DecimalField('Result testing hours', default=0, decimal_places=1, max_digits=5,
-                                         validators=[MinValueValidator(Decimal('0.01'))])
+    result_testing = models.DecimalField('Result testing hours', default=0, decimal_places=2, max_digits=7,
+                                         validators=[MinValueValidator(Decimal('0.01')),
+                                                     MaxValueValidator(Decimal('9999.99'))])
 
     def __str__(self):
         return self.project.title + ': ' + self.user.username
@@ -98,6 +110,7 @@ class Log(models.Model):
     def delta_testing(self):
         return self.result_testing - self.initial_testing
 
+
 class Tag(models.Model):
     tag_name = models.CharField('Tag name', max_length=16)
     project = models.ManyToManyField('Project', through='ProjectTag', related_name='tags')
@@ -112,4 +125,7 @@ class ProjectTag(models.Model):
     attach_date = models.DateField('Date of attachment', auto_now=True)
 
     def __str__(self):
-        return self.project.title + ': '+self.tag.tag_name
+        return self.project.title + ': ' + self.tag.tag_name
+
+    def get_attach_date(self):
+        return self.attach_date

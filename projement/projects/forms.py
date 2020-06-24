@@ -9,9 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class LogForm(forms.Form):
-    actual_design = forms.DecimalField()
-    actual_development = forms.DecimalField()
-    actual_testing = forms.DecimalField()
+    actual_design = forms.DecimalField(decimal_places=2)
+    actual_development = forms.DecimalField(decimal_places=2)
+    actual_testing = forms.DecimalField(decimal_places=2)
 
     def clean_actual_design(self):
         data = self.cleaned_data['actual_design']

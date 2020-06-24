@@ -34,8 +34,6 @@ def export_xls(request):
     columns = ['Project', 'Company', 'Estimated', 'Actual', ]
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
-    # Sheet body, remaining rows
-    # rows = Project.objects.all().values_list('title', 'company', Project.total_estimated_hours, Project.total_actual_hours)
     projects = Project.objects.all()
 
     font_style = xlwt.XFStyle()
@@ -65,12 +63,17 @@ def log_changes(request, pk):
             log.result_design = project.actual_design
             log.result_development = project.actual_development
             log.result_testing = project.actual_testing
+
             if log.delta_design == 0 and log.delta_development == 0 and log.delta_testing == 0:
                 return HttpResponseRedirect(reverse('dashboard'))
             else:
-                project.save()
-                log.save()
-            return HttpResponseRedirect(reverse('dashboard'))
+                if log.result_design > 9999.99 or log.result_development > 9999.99 or log.result_testing > 9999.99:
+                    form = LogForm(initial={'actual_design': 0, 'actual_development': 0, 'actual_testing': 0})
+                    return render(request, 'projects/project_form.html', {'form': form})
+                else:
+                    project.save()
+                    log.save()
+                return HttpResponseRedirect(reverse('dashboard'))
     else:
         form = LogForm(initial={'actual_design': 0, 'actual_development': 0, 'actual_testing': 0})
 
@@ -100,9 +103,8 @@ class DashboardView(LoginRequiredMixin, ListView):
     template_name = 'projects/dashboard.html'
 
     def get_queryset(self):
-        projects = super().get_queryset()
-        projects = projects.select_related('company')
-        return projects
+        return Project.objects.order_by(F('end_date').asc(nulls_last=True)).reverse()
+
 
 
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
