@@ -72,27 +72,27 @@ class Log(models.Model):
     user = models.ForeignKey('auth.user', on_delete=models.CASCADE)
 
     initial_design = models.DecimalField('Initial design hours', default=0, max_digits=7, decimal_places=2,
-                                         validators=[MinValueValidator(Decimal('0.01')),
+                                         validators=[MinValueValidator(Decimal('0')),
                                                      MaxValueValidator(Decimal('9999.99'))])
 
     result_design = models.DecimalField('Result design hours', default=0, decimal_places=2, max_digits=7,
-                                        validators=[MinValueValidator(Decimal('0.01')),
+                                        validators=[MinValueValidator(Decimal('0')),
                                                     MaxValueValidator(Decimal('9999.99'))])
 
     initial_development = models.DecimalField('Initial development hours', default=0, max_digits=7, decimal_places=2,
-                                              validators=[MinValueValidator(Decimal('0.01')),
+                                              validators=[MinValueValidator(Decimal('0')),
                                                           MaxValueValidator(Decimal('9999.99'))])
 
     result_development = models.DecimalField('Result development hours', default=0, decimal_places=2, max_digits=7,
-                                             validators=[MinValueValidator(Decimal('0.01')),
+                                             validators=[MinValueValidator(Decimal('0')),
                                                          MaxValueValidator(Decimal('9999.99'))])
 
     initial_testing = models.DecimalField('Initial testing hours', default=0, max_digits=7, decimal_places=2,
-                                          validators=[MinValueValidator(Decimal('0.01')),
+                                          validators=[MinValueValidator(Decimal('0')),
                                                       MaxValueValidator(Decimal('9999.99'))])
 
     result_testing = models.DecimalField('Result testing hours', default=0, decimal_places=2, max_digits=7,
-                                         validators=[MinValueValidator(Decimal('0.01')),
+                                         validators=[MinValueValidator(Decimal('0')),
                                                      MaxValueValidator(Decimal('9999.99'))])
 
     def __str__(self):
