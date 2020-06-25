@@ -37,7 +37,6 @@ class DashboardTestCase(TestCase):
         self.assertEqual(len(projects), 3)
 
     def test_projects_ordering(self):
-        # First project must be 'Comics'
 
         response = self.authenticated_client.get('/dashboard/')
         projects = response.context['projects']
@@ -54,6 +53,10 @@ class FormTestCase(TestCase):
         data = {'actual_design': '5', 'actual_development': '5', 'actual_testing': '5'}
         form = LogForm(data)
         self.assertTrue(form.is_valid())
+
+        data = {'actual_design': '99999', 'actual_development': '99999', 'actual_testing': '99999'}
+        form = LogForm(data)
+        self.assertFalse(form.is_valid())
 
 
 class ProjectsTestCase(TestCase):
