@@ -37,10 +37,38 @@ class DashboardTestCase(TestCase):
         self.assertEqual(len(projects), 3)
 
     def test_projects_ordering(self):
-
         response = self.authenticated_client.get('/dashboard/')
         projects = response.context['projects']
         self.assertEqual(projects[0].title, 'Projement')
+
+    def test_get_xls_unauthorized(self):
+        client = Client()
+        response = client.get('/xls/')
+        self.assertEqual(response.status_code, 302)
+
+    def test_get_xls_authorized(self):
+        response = self.authenticated_client.get('/xls/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_log_unauthorized(self):
+        client = Client()
+        response = client.get('/log/')
+        self.assertEqual(response.status_code, 302)
+
+    def test_get_log_authorized(self):
+        response = self.authenticated_client.get('/log/')
+        self.assertEqual(response.status_code, 200)
+
+    '''def test_change_record(self):
+        print(Project.objects.get(id = 1).actual_design)
+        form = LogForm(initial={'actual_design': 5, 'actual_development': 5, 'actual_testing': 5})
+        response = self.authenticated_client.post('/projects/1', data= form.data)
+        print(Project.objects.get(id=1).actual_design)
+        self.assertEqual(response.status_code, 301)
+        '''
+
+
+
 
 
 class FormTestCase(TestCase):
