@@ -112,11 +112,11 @@ class Log(models.Model):
 
 
 class Tag(models.Model):
-    tag_name = models.CharField('Tag name', max_length=16)
+    tagname = models.CharField('Tag name', max_length=16)
     project = models.ManyToManyField('Project', through='ProjectTag', related_name='tags')
 
     def __str__(self):
-        return self.tag_name
+        return self.tagname
 
 
 class ProjectTag(models.Model):
@@ -125,7 +125,7 @@ class ProjectTag(models.Model):
     attach_date = models.DateField('Date of attachment', auto_now=True)
 
     def __str__(self):
-        return self.project.title + ': ' + self.tag.tag_name
+        return self.project.title + ': ' + self.tag.tagname
 
     def get_attach_date(self):
         return self.attach_date
