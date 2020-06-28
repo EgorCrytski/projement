@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+
+  app:
+    restart: always
+    links:
+      - db:db
+    env_file:
+      - common.env
+    build:
+      context: projement
+    command: >
+        bash -c "python projement/manage.py migrate
+        && python projement/manage.py initadmin
+        && python projement/manage.py runserver 0.0.0.0:8000"
+
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+
+
