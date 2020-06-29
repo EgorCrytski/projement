@@ -7,4 +7,4 @@ COPY Pipfile* /code/
 RUN pip install pipenv && \
     pipenv install --system --deploy --ignore-pipfile
 
-COPY .. /code
+COPY . /code
